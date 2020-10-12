@@ -264,6 +264,7 @@ int main(int argc, char* argv[])
         std::string node_name = "com.robotraconteur.hid.joystick";
         node_name += boost::lexical_cast<std::string>(joy_id);
 
+        RobotRaconteur::Companion::RegisterStdRobDefServiceTypes();
         RR::ServerNodeSetup node_setup(std::vector<RR::ServiceFactoryPtr>(), node_name, 64234);
 
         RR::RobotRaconteurNode::s()->RegisterService("joystick", "com.robotraconteur.hid.joystick", joy_impl);
