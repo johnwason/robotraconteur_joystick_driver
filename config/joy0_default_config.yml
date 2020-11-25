@@ -1,0 +1,4 @@
+device_info:
+  device:
+    name: joy0
+  user_description: Joystick 0

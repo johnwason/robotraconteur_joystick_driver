@@ -14,12 +14,13 @@
 
 #include "joystick_impl.h"
 
+#include <RobotRaconteurCompanion/Util/SensorDataUtil.h>
+
 namespace robotraconteur_joystick_driver
 {
 
-rrjoy::JoystickInfoPtr fill_joystick_info(SDL_Joystick* joy, uint32_t id)
+void fill_joystick_info(SDL_Joystick* joy, uint32_t id, rrjoy::JoystickInfoPtr joy_info)
 {
-    rrjoy::JoystickInfoPtr joy_info(new rrjoy::JoystickInfo());
     joy_info->id = id;
     joy_info->axes_count = (uint32_t)SDL_JoystickNumAxes(joy);
     joy_info->button_count = (uint32_t)SDL_JoystickNumButtons(joy);
@@ -65,9 +66,8 @@ rrjoy::JoystickInfoPtr fill_joystick_info(SDL_Joystick* joy, uint32_t id)
     joy_info->joystick_device_product = SDL_JoystickGetProduct(joy);
     joy_info->joystick_device_version = SDL_JoystickGetProductVersion(joy);
     SDL_JoystickGUID guid = SDL_JoystickGetGUID(joy);
-    memcpy(joy_info->joystick_uuid.a, guid.data, sizeof(guid.data));
+    memcpy(joy_info->joystick_uuid.a.data(), guid.data, sizeof(guid.data));
 
-    return joy_info;
 }
 
 rrjoy::JoystickStatePtr fill_joystick_state(SDL_Joystick* joy)
@@ -120,24 +120,12 @@ rrjoy::GamepadStatePtr fill_gamepad_state(SDL_GameController* joy)
     return joy_state;
 }
 
-rrsensordata::SensorDataHeaderPtr fill_sensor_data_header(RR::RobotRaconteurNodePtr node, uint64_t seqno)
-{
-    rrsensordata::SensorDataHeaderPtr header(new rrsensordata::SensorDataHeader());
-    auto now = RR::TimeSpec::Now(node);
-    memset(&header->ts,0,sizeof(header->ts));
-    header->ts.seconds = now.seconds;
-    header->ts.nanoseconds = now.nanoseconds;
-
-    header->seqno = seqno;
-    return header;
-}
-
 JoystickImpl::JoystickImpl()
 {
-
+   
 }
 
-void JoystickImpl::Open(uint32_t id)
+void JoystickImpl::Open(uint32_t id, com::robotraconteur::hid::joystick::JoystickInfoPtr joy_info)
 {
 
     boost::mutex::scoped_lock lock(this_lock);
@@ -208,6 +196,9 @@ void JoystickImpl::Open(uint32_t id)
     this->joy = joy;
     this->pad = pad;
     this->haptic = haptic;
+
+    fill_joystick_info(joy,id,joy_info);
+    this->joy_info = joy_info;
 }
 
 void JoystickImpl::RRServiceObjectInit(RR_WEAK_PTR<RR::ServerContext> context, const std::string& service_path)
@@ -223,7 +214,7 @@ void JoystickImpl::RRServiceObjectInit(RR_WEAK_PTR<RR::ServerContext> context, c
 rrjoy::JoystickInfoPtr JoystickImpl::get_joystick_info()
 {
     boost::mutex::scoped_lock lock(this_lock);
-    return fill_joystick_info(joy, id);
+    return joy_info;
 }
 
 void JoystickImpl::SendState()
@@ -263,7 +254,7 @@ void JoystickImpl::SendState()
     }
 
     rrjoy::JoystickStateSensorDataPtr joy_sensor_data(new rrjoy::JoystickStateSensorData());
-    joy_sensor_data->data_header = fill_sensor_data_header(RR::RobotRaconteurNode::sp(), seqno);
+    joy_sensor_data->data_header = RobotRaconteur::Companion::Util::FillSensorDataHeader(RR::RobotRaconteurNode::sp(), joy_info->device_info, seqno);
     joy_sensor_data->joystick_state = joy_state;
     joy_sensor_data->gamepad_state = pad_state;
 

@@ -13,6 +13,8 @@
 // limitations under the License.
 
 #include "joystick_impl.h"
+#include <RobotRaconteurCompanion/InfoParser/yaml/yaml_parser_all.h>
+#include <RobotRaconteurCompanion/Util/InfoFileLoader.h>
 
 namespace robotraconteur_joystick_driver
 {
@@ -209,18 +211,19 @@ int main(int argc, char* argv[])
             ("list-yaml", "list available joysticks in yaml format")
             ("list-yaml-save", po::value<std::string>(), "save list of available joysticks in yaml format")
             ("identify", "identify joystick by holding a button")
-            ("joystick-id", po::value<uint32_t>(), "joystick ID");
+            ("joystick-id", po::value<uint32_t>(), "joystick ID")
+            ("joystick-info-file", po::value<std::string>(), "joystick info file (required)");
 
         //
         //robotraconteur_joystick_driver::identify_joystick();
 
         po::variables_map vm;
-        po::store(po::parse_command_line(argc, argv, desc), vm);
+        po::store(po::command_line_parser(argc, argv).options(desc).allow_unregistered().run(), vm);
         po::notify(vm);
 
         if (vm.count("help"))
         {
-            std::cout << "Robot Raconteur Joystick Driver Version 0.1.0" << std::endl << std::endl;
+            std::cout << "Robot Raconteur Joystick Driver Version 0.1.1" << std::endl << std::endl;
             std::cout << desc << std::endl;
             return 1;
         }
@@ -258,8 +261,13 @@ int main(int argc, char* argv[])
             joy_id = vm["joystick-id"].as<uint32_t>();
         }
 
+        std::vector<RobotRaconteur::Companion::Util::LocalIdentifierLockPtr> identifier_locks;
+
+        std::string info_filename = vm["joystick-info-file"].as<std::string>();
+        auto joy_info = RobotRaconteur::Companion::Util::LoadInfoFile<com::robotraconteur::hid::joystick::JoystickInfoPtr>(info_filename, identifier_locks, "joystick");
+
         auto joy_impl = boost::make_shared<JoystickImpl>();
-        joy_impl->Open(joy_id);
+        joy_impl->Open(joy_id,joy_info);
 
         std::string node_name = "com.robotraconteur.hid.joystick";
         node_name += boost::lexical_cast<std::string>(joy_id);

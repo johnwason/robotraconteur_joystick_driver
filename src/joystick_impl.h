@@ -53,11 +53,13 @@ protected:
 
     uint64_t seqno = 0;
 
+    rrjoy::JoystickInfoPtr joy_info;
+    
 public:
 
     JoystickImpl();
 
-    void Open(uint32_t id);
+    void Open(uint32_t id, rrjoy::JoystickInfoPtr joy_info);
 
     virtual void RRServiceObjectInit(RR_WEAK_PTR<RR::ServerContext> context, const std::string& service_path);
 
