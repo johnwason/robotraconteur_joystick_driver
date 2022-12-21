@@ -262,6 +262,12 @@ int main(int argc, char* argv[])
             joy_id = vm["joystick-id"].as<uint32_t>();
         }
 
+        if (vm.count("joystick-info-file")==0)
+        {
+            std::cerr << "joystick-info-file argument is required" << std::endl;
+            return 1;
+        }
+
         std::vector<RobotRaconteur::Companion::Util::LocalIdentifierLockPtr> identifier_locks;
 
         std::string info_filename = vm["joystick-info-file"].as<std::string>();
