@@ -189,6 +189,7 @@ int main(int argc, char* argv[])
     using namespace RobotRaconteur;
     namespace po = boost::program_options;
 
+    SDL_SetHint(SDL_HINT_JOYSTICK_THREAD, "1");
     if (SDL_Init(SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER | SDL_INIT_HAPTIC | SDL_INIT_NOPARACHUTE) < 0)
     {
         std::cerr << "Could not initialize SDL2, aborting" << std::endl;
