@@ -15,6 +15,7 @@
 #include "joystick_impl.h"
 #include <RobotRaconteurCompanion/InfoParser/yaml/yaml_parser_all.h>
 #include <RobotRaconteurCompanion/Util/InfoFileLoader.h>
+#include "simple_launch_process_cpp/simple_launch_process_cpp.h"
 
 namespace robotraconteur_joystick_driver
 {
@@ -180,6 +181,11 @@ void identify_joystick()
 }
 
 bool keepgoing = true;
+void signal_handler()
+{
+    keepgoing=false;
+}
+
 
 int main(int argc, char* argv[])
 {
@@ -189,19 +195,16 @@ int main(int argc, char* argv[])
     using namespace RobotRaconteur;
     namespace po = boost::program_options;
 
+    simple_launch_process_cpp::CWaitForExit wait_exit;
+
     SDL_SetHint(SDL_HINT_JOYSTICK_THREAD, "1");
     if (SDL_Init(SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER | SDL_INIT_HAPTIC | SDL_INIT_NOPARACHUTE) < 0)
     {
         std::cerr << "Could not initialize SDL2, aborting" << std::endl;
         return 1;
     }
-
-    RR_BOOST_ASIO_IO_CONTEXT signal_context;
-    boost::asio::signal_set signals(signal_context, SIGINT, SIGTERM);
-    signals.async_wait([](const boost::system::error_code& error,int signal_number) {
-        keepgoing=false;
-    });
-
+    wait_exit.CallbackWaitForExit(signal_handler);
+    
     try
     {
 
@@ -292,7 +295,6 @@ int main(int argc, char* argv[])
         {
             joy_impl->SendState();
             rate->Sleep();
-            signal_context.poll();
         }
 
     }
