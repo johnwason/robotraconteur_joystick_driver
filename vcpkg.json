@@ -1,0 +1,11 @@
+{
+    "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
+    "name": "robotraconteur-joystick-driver",
+    "version": "0.2.0",
+    "dependencies": [
+      "robotraconteur",
+      "robotraconteur-companion",
+      "drekar-launch-process-cpp",
+      "sdl2"
+    ]
+  }

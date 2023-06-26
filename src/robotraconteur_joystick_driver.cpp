@@ -15,7 +15,7 @@
 #include "joystick_impl.h"
 #include <RobotRaconteurCompanion/InfoParser/yaml/yaml_parser_all.h>
 #include <RobotRaconteurCompanion/Util/InfoFileLoader.h>
-#include "simple_launch_process_cpp/simple_launch_process_cpp.h"
+#include "drekar_launch_process_cpp/drekar_launch_process_cpp.h"
 
 namespace robotraconteur_joystick_driver
 {
@@ -195,7 +195,7 @@ int main(int argc, char* argv[])
     using namespace RobotRaconteur;
     namespace po = boost::program_options;
 
-    simple_launch_process_cpp::CWaitForExit wait_exit;
+    drekar_launch_process_cpp::CWaitForExit wait_exit;
 
     SDL_SetHint(SDL_HINT_JOYSTICK_THREAD, "1");
     if (SDL_Init(SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER | SDL_INIT_HAPTIC | SDL_INIT_NOPARACHUTE) < 0)
