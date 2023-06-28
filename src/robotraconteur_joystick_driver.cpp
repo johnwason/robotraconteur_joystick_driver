@@ -15,6 +15,7 @@
 #include "joystick_impl.h"
 #include <RobotRaconteurCompanion/InfoParser/yaml/yaml_parser_all.h>
 #include <RobotRaconteurCompanion/Util/InfoFileLoader.h>
+#include <RobotRaconteurCompanion/Util/AttributesUtil.h>
 #include "drekar_launch_process_cpp/drekar_launch_process_cpp.h"
 
 namespace robotraconteur_joystick_driver
@@ -274,7 +275,8 @@ int main(int argc, char* argv[])
         std::vector<RobotRaconteur::Companion::Util::LocalIdentifierLockPtr> identifier_locks;
 
         std::string info_filename = vm["joystick-info-file"].as<std::string>();
-        auto joy_info = RobotRaconteur::Companion::Util::LoadInfoFile<com::robotraconteur::hid::joystick::JoystickInfoPtr>(info_filename, identifier_locks, "joystick");
+        auto joy_info = RobotRaconteur::Companion::Util::LoadInfoFile<com::robotraconteur::hid::joystick::JoystickInfoPtr>(info_filename, identifier_locks, "device");
+        auto attributes = RobotRaconteur::Companion::Util::GetDefaultServiceAttributesFromDeviceInfo(joy_info->device_info);
 
         auto joy_impl = boost::make_shared<JoystickImpl>();
         joy_impl->Open(joy_id,joy_info);
@@ -285,7 +287,8 @@ int main(int argc, char* argv[])
         RobotRaconteur::Companion::RegisterStdRobDefServiceTypes();
         RR::ServerNodeSetup node_setup(std::vector<RR::ServiceFactoryPtr>(), node_name, 64234);
 
-        RR::RobotRaconteurNode::s()->RegisterService("joystick", "com.robotraconteur.hid.joystick", joy_impl);
+        auto service_context = RR::RobotRaconteurNode::s()->RegisterService("joystick", "com.robotraconteur.hid.joystick", joy_impl);
+        service_context->SetAttributes(attributes);
 
         RR::RatePtr rate = RobotRaconteurNode::s()->CreateRate(100.0);
 
