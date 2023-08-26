@@ -1,0 +1,11 @@
+{
+    "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg-configuration.schema.json",
+    "registries": [
+        {
+            "kind": "git",
+            "repository": "https://github.com/robotraconteur/vcpkg-robotraconteur",
+            "packages": ["robotraconteur", "robotraconteur-companion", "drekar-launch-process-cpp"],
+            "baseline": "a7bd6344e38f9232f8d19d2128909f58240109c3"
+        }
+    ]
+}
