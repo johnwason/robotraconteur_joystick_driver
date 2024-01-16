@@ -1,11 +1,15 @@
 {
     "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg-configuration.schema.json",
+    "default-registry": {
+        "kind": "builtin",
+        "baseline": "53bef8994c541b6561884a8395ea35715ece75db"
+    },
     "registries": [
         {
             "kind": "git",
             "repository": "https://github.com/robotraconteur/vcpkg-robotraconteur",
             "packages": ["robotraconteur", "robotraconteur-companion", "drekar-launch-process-cpp"],
-            "baseline": "a7bd6344e38f9232f8d19d2128909f58240109c3"
+            "baseline": "fd09410c0402bbb28f6eff956c066ee9b7541b83"
         }
     ]
 }
