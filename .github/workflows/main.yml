@@ -28,7 +28,7 @@ jobs:
       run: cmake --build build --config Release
     - name: cpack
       working-directory: build
-      run: cpack -G ZIP    
+      run: cpack -G ZIP
     - name: upload
       uses: actions/upload-artifact@v4
       with:
