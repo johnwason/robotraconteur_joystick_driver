@@ -1,4 +1,4 @@
-FROM ubuntu:jammy 
+FROM ubuntu:jammy
 WORKDIR /app
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -20,4 +20,3 @@ ENV JOYSTICK_INFO_FILE=/config/joy0_default_config.yml
 ENV JOYSTICK_ID=0
 
 CMD exec /usr/local/bin/robotraconteur_joystick_driver --joystick-info-file=$JOYSTICK_INFO_FILE --joystick-id=$JOYSTICK_ID
-

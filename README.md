@@ -64,7 +64,7 @@ A simple Python example that reads the gamepad and rumbles periodically:
     rumble_counter = 1000
 
     while True:
-            
+
         pad_state, _ = c.gamepad_state.PeekInValue()
         print(str(pad_state.left_x) + "," + str(pad_state.left_y) + ","
             + str(pad_state.trigger_left) + "," + str(pad_state.trigger_right) + ","
