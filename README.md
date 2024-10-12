@@ -11,6 +11,34 @@ By default the update rate is 100 Hz.
 Binaries for Windows are available on the [Releases](https://github.com/robotraconteur-contrib/robotraconteur_joystick_driver/releases)
 page. Use Docker for Linux.
 
+## Connection Info
+
+The default connection information is as follows. These details may be changed using `--robotraconteur-*` command
+line options when starting the service. Also see the
+[Robot Raconteur Service Browser](https://github.com/robotraconteur/RobotRaconteur_ServiceBrowser) to detect
+services on the network.
+
+- URL: `rr+tcp://localhost:64234?service=joystick`
+- Device Name: `joy0` or device name in the configuration file
+- Node Name: `com.robotraconteur.hid.joystickN` where N is the ID of the joystick
+- Service Name: `joystick`
+- Root Object Type:
+  - `com.robotraconteur.hid.joystick.Joystick`
+
+The following command line arguments are available:
+
+* `--joystick-info-file=` - The joystick info file. Info files are available in the `config/` directory. See [robot info file documentation](https://github.com/robotraconteur/robotraconteur_standard_robdef/blob/master/docs/info_files/joystick.md)
+* `--joystick-id=` - The ID of the joystick to use. The default is 0. The ID is an integer that is used to identify the joystick. Use the `--list` option to list the available joysticks and their IDs.
+* `--list` - List the available joysticks and their IDs.
+* `--list-yaml` - List the available joysticks and their IDs in YAML format.
+* `--list-yaml-save=` - List the available joysticks and their IDs in YAML format and save to a file.
+* `--identify` - Identify the joystick. Hold a button on the joystick/gamepad to determine its ID.
+
+The [common Robot Raconteur node options](https://github.com/robotraconteur/robotraconteur/wiki/Command-Line-Options) are also available.
+
+If more than one joystick service is running, the TCP port must be changed using the
+`--robotraconteur-tcp-port=` command line option.
+
 ## Usage
 
 ### List available devices
