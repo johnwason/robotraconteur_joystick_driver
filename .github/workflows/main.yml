@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+  release:
+    types: [created]
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: vcpkg build
+      id: vcpkg
+      uses: johnwason/vcpkg-action@v6
+      with:
+        manifest-dir: ${{ github.workspace }}
+        triplet: x64-windows-static-md-release
+        token: ${{ github.token }}
+        github-binarycache: true
+    - name: cmake configure
+      run: |
+        cmake -B build -S . ${{ steps.vcpkg.outputs.vcpkg-cmake-config }}
+    - name: cmake build
+      run: cmake --build build --config Release
+    - name: cpack
+      working-directory: build
+      run: cpack -G ZIP    
+    - name: upload
+      uses: actions/upload-artifact@v4
+      with:
+        name: joystick_robotraconteur_driver_win
+        path: build/*.zip
+  pre-commit:
+    runs-on: ubuntu-22.04
+    env:
+      SKIP: no-commit-to-branch
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v3
+    - name: apt
+      run: |
+        sudo apt update
+        sudo apt install -y dos2unix
+    - uses: pre-commit/action@v3.0.1
