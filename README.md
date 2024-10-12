@@ -1,3 +1,5 @@
+<p align="center"><img src="https://raw.githubusercontent.com/robotraconteur/robotraconteur/refs/heads/master/docs/figures/logo-header.svg"></p>
+
 # Robot Raconteur Joystick Driver
 
 This package provides a joystick and gamepad Robot Raconteur driver service. It implements the `com.robotraconteur.hid.joystick.Joystick` standard type. Rumble and constant-force-feedback are implemented for devices that support haptic feedback.
@@ -5,6 +7,9 @@ This package provides a joystick and gamepad Robot Raconteur driver service. It 
 This driver is based on the [SDL2 Library](https://www.libsdl.org/) joystick, gamepad, and haptic features.
 
 By default the update rate is 100 Hz.
+
+Binaries for Windows are available on the [Releases](https://github.com/robotraconteur-contrib/robotraconteur_joystick_driver/releases)
+page. Use Docker for Linux.
 
 ## Usage
 
@@ -79,8 +84,32 @@ A simple Python example that reads the gamepad and rumbles periodically:
 
 The joystick driver provides both "Joystick" and "Gamepad" style SDL2 interfaces. The "Gamepad" interface is guaranteed to provide a consistent XBox gamepad button and stick style mapping. The "Joystick" passes the manufacturer mapping of the device, and has few constraints an the configuration of the "axes", "buttons", and "hats" that are read by the SDL2 driver. See the [SDL2 Documentation](https://wiki.libsdl.org/APIByCategory) for more information on how to interpret the "Joystick" and "Gamepad" readings.
 
+## Docker Usage
+
+```
+sudo docker run --rm --net=host --privileged -v /var/run/robotraconteur:/var/run/robotraconteur -v /var/lib/robotraconteur:/var/lib/robotraconteur -e JOYSTICK_INFO_FILE=/config/joy0_default_config.yml -e JOYSTICK_ID=0 wasontech/robotraconteur-joystick-driver
+```
+
+It may be necessary to mount a docker "volume" to access configuration yml files that are not included in the docker image.
+See the docker documentation for instructions on mounting a local directory as a volume so it can be accessed inside the docker.
+
+To list the available devices:
+
+```
+sudo docker run --rm --net=host --privileged -v /var/run/robotraconteur:/var/run/robotraconteur -v /var/lib/robotraconteur:/var/lib/robotraconteur  wasontech/robotraconteur-joystick-driver /usr/local/bin/robotraconteur_joystick_driver --list
+```
+
 ## License
 
 Apache 2.0 Licensed by Wason Technology, LLC
 
 Author: John Wason, PhD
+
+## Acknowledgment
+
+This work was supported in part by the Advanced Robotics for Manufacturing ("ARM") Institute under Agreement Number W911NF-17-3-0004 sponsored by the Office of the Secretary of Defense. The views and conclusions contained in this document are those of the authors and should not be interpreted as representing the official policies, either expressed or implied, of either ARM or the Office of the Secretary of Defense of the U.S. Government. The U.S. Government is authorized to reproduce and distribute reprints for Government purposes, notwithstanding any copyright notation herein.
+
+This work was supported in part by the New York State Empire State Development Division of Science, Technology and Innovation (NYSTAR) under contract C160142.
+
+![](https://github.com/robotraconteur/robotraconteur/blob/master/docs/figures/arm_logo.jpg?raw=true)
+![](https://github.com/robotraconteur/robotraconteur/blob/master/docs/figures/nys_logo.jpg?raw=true)
