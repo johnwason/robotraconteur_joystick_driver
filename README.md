@@ -25,20 +25,6 @@ services on the network.
 - Root Object Type:
   - `com.robotraconteur.hid.joystick.Joystick`
 
-The following command line arguments are available:
-
-* `--joystick-info-file=` - The joystick info file. Info files are available in the `config/` directory. See [robot info file documentation](https://github.com/robotraconteur/robotraconteur_standard_robdef/blob/master/docs/info_files/joystick.md)
-* `--joystick-id=` - The ID of the joystick to use. The default is 0. The ID is an integer that is used to identify the joystick. Use the `--list` option to list the available joysticks and their IDs.
-* `--list` - List the available joysticks and their IDs.
-* `--list-yaml` - List the available joysticks and their IDs in YAML format.
-* `--list-yaml-save=` - List the available joysticks and their IDs in YAML format and save to a file.
-* `--identify` - Identify the joystick. Hold a button on the joystick/gamepad to determine its ID.
-
-The [common Robot Raconteur node options](https://github.com/robotraconteur/robotraconteur/wiki/Command-Line-Options) are also available.
-
-If more than one joystick service is running, the TCP port must be changed using the
-`--robotraconteur-tcp-port=` command line option.
-
 ## Usage
 
 ### List available devices
@@ -67,9 +53,25 @@ Run the joystick service for the specified device:
 
     robotraconteur_joystick_driver --joystick_id=<id>
 
+### Command Line Options
+
+The following command line arguments are available:
+
+* `--joystick-info-file=` - The joystick info file. Info files are available in the `config/` directory. See [robot info file documentation](https://github.com/robotraconteur/robotraconteur_standard_robdef/blob/master/docs/info_files/joystick.md)
+* `--joystick-id=` - The ID of the joystick to use. The default is 0. The ID is an integer that is used to identify the joystick. Use the `--list` option to list the available joysticks and their IDs.
+* `--list` - List the available joysticks and their IDs.
+* `--list-yaml` - List the available joysticks and their IDs in YAML format.
+* `--list-yaml-save=` - List the available joysticks and their IDs in YAML format and save to a file.
+* `--identify` - Identify the joystick. Hold a button on the joystick/gamepad to determine its ID.
+
+The [common Robot Raconteur node options](https://github.com/robotraconteur/robotraconteur/wiki/Command-Line-Options) are also available.
+
+If more than one joystick service is running, the TCP port must be changed using the
+`--robotraconteur-tcp-port=` command line option.
+
 ### Robot Raconteur command line options
 
-All Robot Raconteur node setup command line options are supported. See [Command Line Options](https://github.com/robotraconteur/robotraconteur/wiki/Command-Line-Options)
+All Robot Raconteur node setup command line options are supported. See [Robot Raconteur Node Command Line Options](https://github.com/robotraconteur/robotraconteur/wiki/Command-Line-Options)
 
 By default the node listens on TCP port 64234 and have the NodeName com.robotraconteur.hid.joystickN, where N is the ID of the joystick. These can be overridden using Robot Raconteur node setup command line options. For example,
 
@@ -79,13 +81,7 @@ will use Joystick 1, will listen on TCP port 54444, and will have NodeName "joys
 
 Note that it is necessary to change the TCP port if multiple joysticks services are running.
 
-### Client Connection
-
-For the default options on localhost, the following connection URL can be used:
-
-    rr+tcp://localhost:64234?service=joystick
-
-### Example Client
+## Example Client
 
 A simple Python example that reads the gamepad and rumbles periodically:
 
